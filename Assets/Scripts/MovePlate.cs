@@ -44,7 +44,7 @@ public class MovePlate : MonoBehaviour
 
         controller.GetComponent<Game>().SetPosition(reference);
 
-        //reference.GetComponent<Chessman>().DestroyMovePlates();
+        reference.GetComponent<Chessman>().DestroyMovePlates();
     }
     public void SetCoords(int x, int y)
     {
