@@ -81,9 +81,12 @@ public class Chessman : MonoBehaviour
 
     private void OnMouseUp()
     {
-        DestroyMovePlates();
+        if (!controller.GetComponent<Game>().IsGameOver() && controller.GetComponent<Game>().GetCurrentPlayer() == player)
+        {
+            DestroyMovePlates();
 
-        InitiateMovePlates();
+            InitiateMovePlates();
+        }
     }
 
     public void DestroyMovePlates()
@@ -197,7 +200,8 @@ public class Chessman : MonoBehaviour
             if (cp == null)
             {
                 MovePlateSpawn(x, y);
-            } else if (cp.GetComponent<Chessman>().player != player)
+            }
+            else if (cp.GetComponent<Chessman>().player != player)
             {
                 MovePlateAttackSpawn(x, y);
             }
@@ -235,8 +239,8 @@ public class Chessman : MonoBehaviour
         x *= 0.66f;
         y *= 0.66f;
 
-        x *= -2.3f;
-        y *= -2.3f;
+        x += -2.3f;
+        y += -2.3f;
 
         GameObject mp = Instantiate(movePlate, new Vector3(x, y, -3.0f), Quaternion.identity);
 
