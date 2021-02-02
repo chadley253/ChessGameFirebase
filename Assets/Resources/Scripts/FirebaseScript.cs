@@ -14,6 +14,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Threading;
 using System.IO;
+using UnityEngine.SceneManagement;
 
 //using UnityEngine.UIElements;
 
@@ -23,7 +24,8 @@ using System.IO;
 
 public class FirebaseScript : MonoBehaviour
 {
-    
+ 
+
     DatabaseReference reference;
 
     //reference to the storage bucket
@@ -39,9 +41,17 @@ public class FirebaseScript : MonoBehaviour
 
     FirebaseAuth auth;
 
-    string email = "gerrysaid.test5@gmail.com";
-    string password = "IamNotSupposedToSeeThis1234!";
+    string email;
+    string password;
 
+    //BG loader
+    int RandomNumBG;
+
+    //mainmenu
+    public InputField emailIF;
+    public InputField passwordIF;
+    public Button login;
+    public Button register;
 
 
     public IEnumerator addDataClass(string datatoinsert,gameManager g)
@@ -100,7 +110,7 @@ public class FirebaseScript : MonoBehaviour
         Debug.Log(File.Exists(filename));
 
         
-        StorageReference storage_ref = storage.GetReferenceFromUrl("gs://gerry-firebase1.appspot.com");
+        StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com");
 
         StorageReference screenshots_folder = storage_ref.Child("screenshots"+ actualfilename);
 
@@ -157,43 +167,130 @@ public class FirebaseScript : MonoBehaviour
 
     public IEnumerator downloadAndSaveImage()
     {
+        if (RandomNumBG == 1)
+        {
+            string pathToSaveIn = Application.persistentDataPath;
+            storage = FirebaseStorage.DefaultInstance;
+            // Create local filesystem URL
+            string filename = Application.persistentDataPath + "/image1.jpg";
+            StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com/image1.jpg");
+            // Start downloading a file
+            Task task = storage_ref.GetFileAsync(filename,
+              new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+              {
+              // called periodically during the download
+              Debug.Log(String.Format(
+              "Progress: {0} of {1} bytes transferred.",
+              state.BytesTransferred,
+              state.TotalByteCount
+            ));
+              }), CancellationToken.None);
 
-        string pathToSaveIn = Application.persistentDataPath;
-
-        storage = FirebaseStorage.DefaultInstance;
-
-        // Create local filesystem URL
-        
-        string filename = Application.persistentDataPath + "/warship1.jpg";
-
-        StorageReference storage_ref = storage.GetReferenceFromUrl("gs://gerry-firebase1.appspot.com/warship1.jpg");
-
-        // Start downloading a file
-        Task task = storage_ref.GetFileAsync(filename,
-          new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) => {
-      // called periodically during the download
-      Debug.Log(String.Format(
-        "Progress: {0} of {1} bytes transferred.",
-        state.BytesTransferred,
-        state.TotalByteCount
-      ));
-          }), CancellationToken.None);
-
-        task.ContinueWith(resultTask => {
-            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            task.ContinueWith(resultTask =>
             {
-                Debug.Log("Download finished.");
-            }
-        });
+                if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+                {
+                    Debug.Log("Download finished.");
+                }
+            });
+            Debug.Log(filename);
+            yield return new WaitUntil(() => task.IsCompleted);
+            Sprite bgimg = LoadSprite(filename);
+            GameObject.Find("backgroundImage").GetComponent<Image>().sprite = bgimg;
+        }
+        else if (RandomNumBG == 2)
+        {
+            string pathToSaveIn = Application.persistentDataPath;
+            storage = FirebaseStorage.DefaultInstance;
+            // Create local filesystem URL
+            string filename = Application.persistentDataPath + "/image2.jpg";
+            StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com/image2.jpg");
+            // Start downloading a file
+            Task task = storage_ref.GetFileAsync(filename,
+              new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+              {
+                  // called periodically during the download
+                  Debug.Log(String.Format(
+                  "Progress: {0} of {1} bytes transferred.",
+                  state.BytesTransferred,
+                  state.TotalByteCount
+                ));
+              }), CancellationToken.None);
 
-        Debug.Log(filename);
+            task.ContinueWith(resultTask =>
+            {
+                if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+                {
+                    Debug.Log("Download finished.");
+                }
+            });
+            Debug.Log(filename);
+            yield return new WaitUntil(() => task.IsCompleted);
+            Sprite bgimg = LoadSprite(filename);
+            GameObject.Find("backgroundImage").GetComponent<Image>().sprite = bgimg;
+        }
+        else if (RandomNumBG == 3)
+        {
+            string pathToSaveIn = Application.persistentDataPath;
+            storage = FirebaseStorage.DefaultInstance;
+            // Create local filesystem URL
+            string filename = Application.persistentDataPath + "/image3.jfif";
+            StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com/image3.jfif");
+            // Start downloading a file
+            Task task = storage_ref.GetFileAsync(filename,
+              new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+              {
+                  // called periodically during the download
+                  Debug.Log(String.Format(
+                  "Progress: {0} of {1} bytes transferred.",
+                  state.BytesTransferred,
+                  state.TotalByteCount
+                ));
+              }), CancellationToken.None);
 
-        yield return new WaitUntil(() => task.IsCompleted);
+            task.ContinueWith(resultTask =>
+            {
+                if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+                {
+                    Debug.Log("Download finished.");
+                }
+            });
+            Debug.Log(filename);
+            yield return new WaitUntil(() => task.IsCompleted);
+            Sprite bgimg = LoadSprite(filename);
+            GameObject.Find("backgroundImage").GetComponent<Image>().sprite = bgimg;
+        }
+        else if (RandomNumBG == 4)
+        {
+            string pathToSaveIn = Application.persistentDataPath;
+            storage = FirebaseStorage.DefaultInstance;
+            // Create local filesystem URL
+            string filename = Application.persistentDataPath + "/image4.jpg";
+            StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com/image4.jpg");
+            // Start downloading a file
+            Task task = storage_ref.GetFileAsync(filename,
+              new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+              {
+                  // called periodically during the download
+                  Debug.Log(String.Format(
+                  "Progress: {0} of {1} bytes transferred.",
+                  state.BytesTransferred,
+                  state.TotalByteCount
+                ));
+              }), CancellationToken.None);
 
-
-        Sprite warship = LoadSprite(filename);
-        GameObject.Find("backgroundImage").GetComponent<Image>().sprite = warship;
-
+            task.ContinueWith(resultTask =>
+            {
+                if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+                {
+                    Debug.Log("Download finished.");
+                }
+            });
+            Debug.Log(filename);
+            yield return new WaitUntil(() => task.IsCompleted);
+            Sprite bgimg = LoadSprite(filename);
+            GameObject.Find("backgroundImage").GetComponent<Image>().sprite = bgimg;
+        }
 
         yield return null;
     }
@@ -290,14 +387,15 @@ public class FirebaseScript : MonoBehaviour
                
              }
             );
-      
+
+        signedin = true;
 
         yield return new WaitUntil(() => signintask.IsCompleted);
 
         Debug.Log("User has signed in");
 
 
-
+        
     }
 
 
@@ -615,7 +713,7 @@ public class FirebaseScript : MonoBehaviour
     public IEnumerator initFirebase()
     {
         if (!signedin) { 
-            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://gerry-firebase1.firebaseio.com/");
+            FirebaseApp.DefaultInstance.SetEditorDatabaseUrl("https://chadleychess-default-rtdb.firebaseio.com/");
             reference = FirebaseDatabase.DefaultInstance.RootReference;
             yield return signInToFirebase();
             Debug.Log("Firebase Initialized!");
@@ -633,8 +731,28 @@ public class FirebaseScript : MonoBehaviour
     //list data from firebase
     void Start()
     {
+        RandomNumBG = UnityEngine.Random.Range(1, 5);
+        StartCoroutine(downloadAndSaveImage());
+        
 
 
+        login.GetComponent<Button>().onClick.AddListener(delegate
+        {
+            email = emailIF.text;
+            password = passwordIF.text;
+            StartCoroutine(signInToFirebase());
+            if (signedin == true)
+            {
+                SceneManager.LoadScene("Scene2");
+            }
+        });
+        register.GetComponent<Button>().onClick.AddListener(() =>
+        {
+            email = emailIF.text;
+            password = passwordIF.text;
+            StartCoroutine(createUser());
+            Debug.Log("Register button clicked");
+        });
 
     }
 
