@@ -240,7 +240,77 @@ public class FirebaseScript : MonoBehaviour
     }
 
 
-   public IEnumerator clearFirebase()
+    public IEnumerator DownloadAndSaveTraditional(string name)
+    {
+        string pathToSaveIn = Application.persistentDataPath;
+        string piecesLoc = "gs://chadleychess.appspot.com/tradtional/" + name + ".png";
+        storage = FirebaseStorage.DefaultInstance;
+        string filename = Application.persistentDataPath + "/black_bishop.png";
+        StorageReference storage_ref = storage.GetReferenceFromUrl(piecesLoc);
+        Task task = storage_ref.GetFileAsync(filename,
+        new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+        {
+            Debug.Log(String.Format(
+              "Progress: {0} of {1} bytes transferred.",
+              state.BytesTransferred,
+              state.TotalByteCount
+            ));
+        }), CancellationToken.None);
+        task.ContinueWith(resultTask =>
+        {
+            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            {
+                Debug.Log("Traditiona Download finished.");
+            }
+        });
+
+        Debug.Log(filename);
+        yield return new WaitUntil(() => task.IsCompleted);
+        Sprite pawns = LoadSprite(filename);
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag(name))
+        {
+            g.GetComponent<SpriteRenderer>().sprite = pawns;
+        }
+
+        yield return null;
+    }
+
+    public IEnumerator DownloadAndSaveRobotic(string name)
+    {
+        string pathToSaveIn = Application.persistentDataPath;
+        string piecesLoc = "gs://chadleychess.appspot.com/robot/" + name + ".png";
+        storage = FirebaseStorage.DefaultInstance;
+        string filename = Application.persistentDataPath + "/black_bishop.png";
+        StorageReference storage_ref = storage.GetReferenceFromUrl(piecesLoc);
+        Task task = storage_ref.GetFileAsync(filename,
+        new Firebase.Storage.StorageProgress<DownloadState>((DownloadState state) =>
+        {
+            Debug.Log(String.Format(
+              "Progress: {0} of {1} bytes transferred.",
+              state.BytesTransferred,
+              state.TotalByteCount
+            ));
+        }), CancellationToken.None);
+        task.ContinueWith(resultTask =>
+        {
+            if (!resultTask.IsFaulted && !resultTask.IsCanceled)
+            {
+                Debug.Log("Traditiona Download finished.");
+            }
+        });
+
+        Debug.Log(filename);
+        yield return new WaitUntil(() => task.IsCompleted);
+        Sprite pawns = LoadSprite(filename);
+        foreach (GameObject g in GameObject.FindGameObjectsWithTag(name))
+        {
+            g.GetComponent<SpriteRenderer>().sprite = pawns;
+        }
+
+        yield return null;
+    }
+
+    public IEnumerator clearFirebase()
     {
         Task removeAllRecords = reference.RemoveValueAsync().ContinueWithOnMainThread(
             rmAllRecords =>
@@ -341,9 +411,6 @@ public class FirebaseScript : MonoBehaviour
 
         
     }
-
-
-
 
     //get the number of records for a child
     public IEnumerator getNumberOfRecords()
@@ -673,16 +740,73 @@ public class FirebaseScript : MonoBehaviour
     public bool signedin = false;
 
     //list data from firebase
+
+
+    IEnumerator LoadTraditionalPiecesOnStart()
+    {
+        StartCoroutine(DownloadAndSaveTraditional("black_bishop"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("black_king"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("black_knight"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("black_pawn"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("black_queen"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("black_rook"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_bishop"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_king"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_knight"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_pawn"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_queen"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveTraditional("white_rook"));
+        yield return new WaitForSeconds(0.2f);
+    }
+
+
+    IEnumerator LoadRoboticPiecesOnStart()
+    {
+        StartCoroutine(DownloadAndSaveRobotic("black_bishop"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("black_king"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("black_knight"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("black_pawn"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("black_queen"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("black_rook"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_bishop"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_king"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_knight"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_pawn"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_queen"));
+        yield return new WaitForSeconds(0.2f);
+        StartCoroutine(DownloadAndSaveRobotic("white_rook"));
+        yield return new WaitForSeconds(0.2f);
+    }
+
     void Start()
     {
         StartCoroutine(initFirebase());
+        //StartCoroutine(LoadTraditionalPiecesOnStart());
+        StartCoroutine(LoadRoboticPiecesOnStart());
         RandomNumBG = UnityEngine.Random.Range(1, 5);
         StartCoroutine(downloadAndSaveImage());
         
-
-
-        
-
     }
 
 
