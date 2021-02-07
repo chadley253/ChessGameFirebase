@@ -41,17 +41,15 @@ public class FirebaseScript : MonoBehaviour
 
     FirebaseAuth auth;
 
-    string email;
-    string password;
+    
+    string email = "chadleychess@gmail.com";
+    string password = "qwerty";
 
     //BG loader
     int RandomNumBG;
 
-    //mainmenu
-    public InputField emailIF;
-    public InputField passwordIF;
-    public Button login;
-    public Button register;
+    
+    
 
 
     public IEnumerator addDataClass(string datatoinsert,gameManager g)
@@ -91,63 +89,7 @@ public class FirebaseScript : MonoBehaviour
     }
 
 
-    public IEnumerator uploadScreenshot()
-    {
-        yield return initFirebase();
-
-        string actualfilename = "/sc_" + DateTime.Now.ToString("MM_dd_yyyyH_mm")+".png";
-
-        string filename = Application.persistentDataPath + actualfilename;
-
-        ScreenCapture.CaptureScreenshot(filename);
-
-        yield return new WaitForSeconds(2f);
-
-        Debug.Log(filename);
-
-        storage = FirebaseStorage.DefaultInstance;
-
-        Debug.Log(File.Exists(filename));
-
-        
-        StorageReference storage_ref = storage.GetReferenceFromUrl("gs://chadleychess.appspot.com");
-
-        StorageReference screenshots_folder = storage_ref.Child("screenshots"+ actualfilename);
-
-        //string local_file_uri = string.Format("{0}://{1}",Uri.UriSchemeFile, filename);
-
-        MetadataChange pngmetadata = new MetadataChange();
-
-        pngmetadata.ContentType = "image/png";
-
-        Task uploadScreenshotTask = screenshots_folder.PutFileAsync(filename,pngmetadata, 
-            new Firebase.Storage.StorageProgress<UploadState>(state => {
-            // called periodically during the upload - you can implement some sort of progress bar display here
-            Debug.Log(String.Format("Progress: {0} of {1} bytes transferred.",
-                               state.BytesTransferred, state.TotalByteCount));
-            }), CancellationToken.None, null);
-            
-            
-         uploadScreenshotTask.ContinueWith(resultTask => {
-             if (!resultTask.IsFaulted && !resultTask.IsCanceled)
-             {
-                 Debug.Log("Upload finished.");
-             }
-
-             if (resultTask.IsFaulted)
-             {
-                 //my internet exploded or firebase exploded or some other error happened here
-                 Debug.Log("Sorry, file  was not uploaded!" + resultTask.Exception);
-
-                 return;
-             }
-         });
-        
-
-        yield return new WaitUntil(() => uploadScreenshotTask.IsCompleted);
-        
-      
-    }
+    
 
     private Sprite LoadSprite(string path)
     {
@@ -733,28 +675,13 @@ public class FirebaseScript : MonoBehaviour
     //list data from firebase
     void Start()
     {
+        StartCoroutine(initFirebase());
         RandomNumBG = UnityEngine.Random.Range(1, 5);
         StartCoroutine(downloadAndSaveImage());
         
 
 
-        login.GetComponent<Button>().onClick.AddListener(delegate
-        {
-            email = emailIF.text;
-            password = passwordIF.text;
-            StartCoroutine(signInToFirebase());
-            if (signedin == true)
-            {
-                SceneManager.LoadScene("Scene2");
-            }
-        });
-        register.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            email = emailIF.text;
-            password = passwordIF.text;
-            StartCoroutine(createUser());
-            Debug.Log("Register button clicked");
-        });
+        
 
     }
 

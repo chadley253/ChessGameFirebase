@@ -818,10 +818,7 @@ public class gameManager : MonoBehaviour
             StartCoroutine(clearDB());
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            StartCoroutine(dbScript.uploadScreenshot());
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.D))
         {
