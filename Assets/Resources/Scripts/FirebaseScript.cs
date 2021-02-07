@@ -802,8 +802,7 @@ public class FirebaseScript : MonoBehaviour
     void Start()
     {
         StartCoroutine(initFirebase());
-        //StartCoroutine(LoadTraditionalPiecesOnStart());
-        //StartCoroutine(LoadRoboticPiecesOnStart());
+        
         if (LoadLevelbasedOnPieces.TraditionalPiecesLoad == true)
         {
             StartCoroutine(LoadTraditionalPiecesOnStart());
