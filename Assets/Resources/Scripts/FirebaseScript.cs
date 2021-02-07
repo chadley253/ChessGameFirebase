@@ -803,7 +803,16 @@ public class FirebaseScript : MonoBehaviour
     {
         StartCoroutine(initFirebase());
         //StartCoroutine(LoadTraditionalPiecesOnStart());
-        StartCoroutine(LoadRoboticPiecesOnStart());
+        //StartCoroutine(LoadRoboticPiecesOnStart());
+        if (LoadLevelbasedOnPieces.TraditionalPiecesLoad == true)
+        {
+            StartCoroutine(LoadTraditionalPiecesOnStart());
+        }
+        if (LoadLevelbasedOnPieces.RoboticPiecesLoad == true)
+        {
+            StartCoroutine(LoadRoboticPiecesOnStart());
+        }
+
         RandomNumBG = UnityEngine.Random.Range(1, 5);
         StartCoroutine(downloadAndSaveImage());
         
