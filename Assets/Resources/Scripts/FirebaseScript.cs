@@ -197,6 +197,8 @@ public class FirebaseScript : MonoBehaviour
             yield return new WaitUntil(() => task.IsCompleted);
             Sprite bgimg = LoadSprite(filename);
             GameObject.Find("backgroundImage").GetComponent<Image>().sprite = bgimg;
+
+            
         }
         else if (RandomNumBG == 2)
         {
